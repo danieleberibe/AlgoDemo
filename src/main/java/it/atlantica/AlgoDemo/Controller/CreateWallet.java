@@ -243,8 +243,8 @@ public class CreateWallet {
     }
     
     @GetMapping(path="/createNft",produces = "application/json; charset=UTF-8")
-    public Long createNFTAsset(@RequestBody String mnemonic) throws Exception {
-    	Account aliceAccount = new Account(mnemonic);
+    public Long createNFTAsset(@RequestBody DataTrans datatrans) throws Exception {
+    	Account aliceAccount = new Account(datatrans.getMnemonic());
         System.out.println(String.format(""));
         System.out.println(String.format("==> CREATE ASSET"));    
         if (client == null)
@@ -265,9 +265,9 @@ public class CreateWallet {
         // Create the Asset:
 
         boolean defaultFrozen = false;
-        String unitName = "ALICEART";
-        String assetName = "Alice's Artwork@arc3";
-        String url = "";
+        String unitName = "Test";
+        String assetName = "Test Dani 1";
+        String url = "https://github.com/danieleberibe/AlgoDemo/blob/main/src/main/java/NFT/metadata.json";
         byte[] imageFile = Files.readAllBytes(Paths.get("C:\\Users\\danie\\Downloads\\AlgoDemo\\src\\main\\java\\NFT\\alice-nft.png"));
         byte[] imgHash = digest(imageFile); 
         String imgSRI = "sha256-" + Base64.getEncoder().encodeToString(imgHash);
@@ -286,12 +286,67 @@ public class CreateWallet {
        
         String assetMetadataHashString = "16efaa3924a6fd9d3a4824799a4ac65d";
 
-      
+        // var metadataJSON = {
+        //     "name": "ALICEART",
+        //     "description": "Alice's Artwork",
+        //     "image": "https:\/\/s3.amazonaws.com\/your-bucket\/images\/alice-nft.png",
+        //     "image_integrity": "sha256-/tih/7ew0eziEZIVD4qoTWb0YrElAuRG3b40SnEstyk=",
+        //     "properties": {
+        //         "simple_property": "Alice's first artwork",
+        //         "rich_property": {
+        //             "name": "AliceArt",
+        //             "value": "001",
+        //             "display_value": "001",
+        //             "class": "emphasis",
+        //             "css": {
+        //                 "color": "#ffffff",
+        //                 "font-weight": "bold",
+        //                 "text-decoration": "underline"
+        //             }
+        //         },
+        //         "array_property": {
+        //             "name": "Artwork",
+        //             "value": [1, 2, 3, 4],
+        //             "class": "emphasis"
+        //         }
+        //     }
+        // }
+
 
         Address manager = aliceAccount.getAddress();  // OPTIONAL: FOR DEMO ONLY, USED TO DESTROY ASSET WITHIN THIS SCRIPT
         Address reserve = null;
         Address freeze = null;
         Address clawback = null;
+        //
+        // For non-fractional NFT ASA simply set the 
+        // assetTotal to 1 and decimals to 0
+   
+        // or
+        // A fractional non-fungible token (fractional NFT)
+        // has the following properties:
+
+        // Total Number of Units (t) MUST be a power of 10 larger than 1: 10, 100, 1000,
+        // ...
+        // Number of Digits after the Decimal Point MUST be equal to the
+        // logarithm in base 10 of total number of units.
+        // In other words, the total supply of the ASA is exactly 1.
+
+        // fractional example for total number of this asset available
+        // for circulation 100 units of .01 fraction each.
+        // fractional example
+        // Integer decimals = 2;
+        // BigInteger assetTotal = BigInteger.valueOf(100);
+
+        // Use actual total > 1 to create a Fungible Token
+
+        // example 1:(fungible Tokens)
+        // assetTotal = 10, decimals = 0, result is 10 total actual
+
+        // example 2: (fractional NFT, each is 0.1)
+        // assetTotal = 10, decimals = 1, result is 1.0 total actual
+
+        // example 3: (NFT)
+        // assetTotal = 1, decimals = 0, result is 1 total actual
 
         // set quantity and decimal placement
         BigInteger assetTotal = BigInteger.valueOf(1);
